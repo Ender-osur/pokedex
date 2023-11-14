@@ -9,7 +9,7 @@ export default function AccountNavigation() {
   return (
     <Stack.Navigator>
         <Stack.Screen 
-          name='Favorite' 
+          name='Account' 
           component={AccountScreen}
            options={{
             title:"Cuenta"

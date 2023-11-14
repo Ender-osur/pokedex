@@ -1,8 +1,8 @@
 //Todas las funciones necesarias para trabajar con la API de pokemon
 
-export const callApi = async (url) => {
+export const callApi = async (url, endPointUrl) => {
     try {
-        const response = await fetch(url);
+        const response = await fetch(url || endPointUrl);
         const result = await response.json();
         return result;
     } catch (error) {

@@ -1,16 +1,18 @@
 import { SafeAreaView, Text } from 'react-native'
 import React, {  useEffect, useState } from 'react'
-import { callApi, getPokemonInfoByUrl } from "../api/pokemon";
 
+import PokemonList from '../components/PokemonList';
+import { callApi, getPokemonInfoByUrl } from "../api/pokemon";
 import { API_HOST } from '../utils/constants';
 
 export default function PokedexScreen() {
-    const limit = 2;
-    const offset = 0;
-    const url = `${API_HOST}?limit=${limit}&offset=${offset}`;
+    const limit = 20;
+    const offset = 20;
+    const url = `${API_HOST}?offset=${offset}&limit=${limit}`;
     
     const [pokemons, setPokemons] = useState([]);
-    console.log('Pokemons--->',pokemons)
+    const [prueba, setPrueba] = useState();
+    const [nextUrl, setNextUrl] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -20,7 +22,11 @@ export default function PokedexScreen() {
 
     const loadPokemons = async () => {
         try {
-            const response = await callApi(url);
+            const response = await callApi(url, nextUrl);
+
+            setNextUrl(response.next);
+            console.log(response.next);
+            setPrueba(response)
             const pokemonArray = [];
 
             for await (const pokemon of response.results) {
@@ -43,17 +49,14 @@ export default function PokedexScreen() {
 
 
     return (
-        <SafeAreaView
-            style={
-                {
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: '#6AA5CD',
-                }
-            }
-        >
-            <Text>Pokedex</Text>
+        <SafeAreaView>
+            <PokemonList 
+                pokemons={pokemons} 
+                loadPokemons={loadPokemons}
+                isNext={nextUrl}
+                isNow={prueba}
+            />
+            <Text></Text>
         </SafeAreaView>
     )
 }
